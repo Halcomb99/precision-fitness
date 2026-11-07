@@ -177,6 +177,12 @@ button.kv{width:100%;background:none;text-align:left}button.kv em{font-style:nor
 .pline .pic2{font-size:15px}.pline .pk{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:700}.pline .pt{line-height:1.4}.pline i{color:var(--muted);font-style:normal;font-size:12.5px}
 .daytot{background:linear-gradient(135deg,rgba(217,151,38,.18),rgba(170,111,24,.04));border:1px solid rgba(217,151,38,.3);border-radius:12px;padding:14px;margin-top:16px}
 .tots{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px;text-align:center}.tots b{font-family:"Playfair Display",serif;font-size:24px;color:var(--accent);display:block}.tots span{font-size:10.5px;color:var(--muted);line-height:1.2;display:block}
+.aboutgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}.aboutgrid label:last-child{grid-column:1/-1}
+.aboutgrid span{display:block;font-size:11.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.hrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.targets{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin:4px 0 12px}
+.tgrow{display:flex;gap:28px;margin-top:6px}.tgrow b{font-family:"Playfair Display",serif;font-size:28px;color:var(--accent);display:block;line-height:1.1}.tgrow span{font-size:12px;color:var(--muted)}
+.targets p{font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.45}.targets a{color:var(--accent)}
 /* nav */
 nav{position:fixed;bottom:0;left:0;right:0;background:rgba(8,9,12,.94);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:8px 0 calc(8px + env(safe-area-inset-bottom))}
 nav .in{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
@@ -199,6 +205,12 @@ const GOALS=[
  {id:'muscle',name:'Build muscle',desc:'Bigger, fuller, more size',ic:'💪'},
  {id:'strength',name:'Get strong',desc:'Lift heavier, raw power',ic:'🏋️'}
 ];
+const GOALTXT={
+ f:{fat:['Lose fat','Slim down and keep your shape','🔥'],lean:['Lean & toned','Defined and toned, not bulky','✨'],athletic:['Athletic','Fit, quick and capable at anything','⚡'],muscle:['Build & shape','Add muscle and curves, especially glutes and legs','🏋️‍♀️'],strength:['Get strong','Lift heavier and feel powerful','💪']},
+ x:{muscle:['Build muscle','Add muscle and shape','💪'],strength:['Get strong','Lift heavier and build real strength','🏋️']}
+};
+function goalList(){const t=GOALTXT[P().sex==='f'?'f':P().sex==='m'?'':'x']||{};return GOALS.map(g=>t[g.id]?{...g,name:t[g.id][0],desc:t[g.id][1],ic:t[g.id][2]}:g)}
+const goalInfo=id=>goalList().find(g=>g.id===id);
 const LEVELS=[
  {id:'beginner',name:'Beginner',desc:'New to working out or coming back after a long break',ic:'🌱'},
  {id:'intermediate',name:'Intermediate',desc:'Training fairly consistently for 6+ months',ic:'📈'},
@@ -211,8 +223,8 @@ const LOCATIONS=[
  {id:'park',name:'Park / outdoors',desc:'Bars, benches, open space',ic:'🌳',equip:['bw','bar']},
  {id:'hotel',name:'Hotel / travel',desc:'Small gym or your room',ic:'🧳',equip:['db','bw','band']}
 ];
-const MUSCLES=[['chest','Chest'],['triceps','Triceps'],['biceps','Biceps'],['shoulders','Shoulders'],['back','Back'],['legs','Legs'],['abs','Abs']];
-const PRESETS=[['Push day',['chest','shoulders','triceps']],['Pull day',['back','biceps']],['Leg day',['legs','abs']],['Full body',['chest','back','legs','shoulders','abs']],['Arms',['biceps','triceps']]];
+const MUSCLES=[['chest','Chest'],['triceps','Triceps'],['biceps','Biceps'],['shoulders','Shoulders'],['back','Back'],['legs','Legs'],['glutes','Glutes'],['abs','Abs']];
+const PRESETS=[['Push day',['chest','shoulders','triceps']],['Pull day',['back','biceps']],['Leg day',['legs','abs']],['Glutes & legs',['glutes','legs']],['Full body',['chest','back','legs','shoulders','abs']],['Arms',['biceps','triceps']]];
 const TIMES=[20,30,45,60];
 const COUNT={20:4,30:5,45:6,60:8};
 
@@ -300,6 +312,25 @@ legs:[
  ['Glute Bridge','bw','i','Squeeze your glutes hard at the top for 2 seconds.'],
  ['Wall Sit','bw','t','Thighs parallel to the floor, back flat on the wall.'],
  ['Calf Raise','bw','i','On a step edge, full stretch down, full squeeze up.']
+],
+glutes:[
+ ['Hip Thrust Machine','gym','c','Upper back on the pad, drive through your heels, squeeze hard at the top with your chin tucked.'],
+ ['Barbell Glute Bridge','gym','c','Pad the bar, push through your heels and hold a one-second squeeze at the top.'],
+ ['Barbell Sumo Squat','gym','c','Wide stance, toes out, sit straight down between your heels and squeeze up.'],
+ ['Cable Pull-Through','gym','c','Face away from the cable, hinge back, then snap your hips forward and squeeze.'],
+ ['Cable Glute Kickback','gym','i','Kick back and slightly up. Keep hips square and don\'t arch your lower back.'],
+ ['Hip Abduction Machine','gym','i','Sit tall, press your knees out slowly, pause, and control them back in.'],
+ ['Dumbbell Sumo Squat','db','c','Hold one dumbbell between your legs, wide stance, sit down and drive up through your heels.'],
+ ['Sumo Deadlift','db','c','Wide stance, chest up, weight between your feet. Push the floor apart as you stand.'],
+ ['Single-Leg Dumbbell RDL','db','c','Hinge on one leg and reach the other back. Keep your hips level and back flat.'],
+ ['Single-Leg Hip Thrust','bw','c','Shoulders on a couch or bench, one foot planted. Drive up through that heel.'],
+ ['Side Lunge','bw','c','Step wide, sit back into one hip and keep the other leg straight.'],
+ ['Single-Leg Glute Bridge','bw','i','One foot planted, other leg up. Lift your hips and squeeze for 2 seconds.'],
+ ['Glute Kickback','bw','i','On all fours, push one heel toward the ceiling. Keep your back flat.'],
+ ['Banded Hip Thrust','band','c','Band just above your knees, shoulders on a bench. Drive up and push your knees out.'],
+ ['Banded Lateral Walk','band','i','Band above your knees, stay in a half squat and step sideways under control.'],
+ ['Banded Clamshell','band','i','Lie on your side, knees bent. Open the top knee without rolling your hips back.'],
+ ['Banded Fire Hydrant','band','i','On all fours, lift one knee out to the side. Keep your hips level.']
 ],
 abs:[
  ['Cable Crunch','gym','i','Kneel, rope by your head, crunch your ribs toward your hips.'],
@@ -586,6 +617,23 @@ const PAT={
 };
 /* exercise → [pattern, primary muscles, secondary muscles] */
 const FX={
+ 'Hip Thrust Machine':['bridge',['glutes'],['hamstrings']],
+ 'Barbell Glute Bridge':['bridge',['glutes'],['hamstrings']],
+ 'Barbell Sumo Squat':['bridge',['glutes', 'quads'],['hamstrings']],
+ 'Cable Pull-Through':['bridge',['glutes', 'hamstrings'],['lowerback']],
+ 'Cable Glute Kickback':['bridge',['glutes'],['hamstrings']],
+ 'Hip Abduction Machine':['bridge',['glutes'],[]],
+ 'Dumbbell Sumo Squat':['bridge',['glutes', 'quads'],[]],
+ 'Sumo Deadlift':['bridge',['glutes', 'quads'],['hamstrings', 'lowerback']],
+ 'Single-Leg Dumbbell RDL':['bridge',['glutes', 'hamstrings'],['lowerback']],
+ 'Single-Leg Hip Thrust':['bridge',['glutes'],['hamstrings']],
+ 'Side Lunge':['bridge',['glutes', 'quads'],[]],
+ 'Single-Leg Glute Bridge':['bridge',['glutes'],['hamstrings']],
+ 'Glute Kickback':['bridge',['glutes'],['hamstrings']],
+ 'Banded Hip Thrust':['bridge',['glutes'],['hamstrings']],
+ 'Banded Lateral Walk':['bridge',['glutes'],[]],
+ 'Banded Clamshell':['bridge',['glutes'],[]],
+ 'Banded Fire Hydrant':['bridge',['glutes'],[]],
  'Barbell Bench Press':['bench',['chest'],['triceps','delts']],
  'Machine Chest Press':['machinepress',['chest'],['triceps','delts']],
  'Cable Fly':['cablefly',['chest'],['delts']],
@@ -755,20 +803,26 @@ function renderOnb(){
   const st=ui.step,p=P();
   if(st===0) return `<div class="welcome">${LOGO}<div class="mtag hl" style="letter-spacing:3px">Precision Fitness</div>
     <h1 style="margin-top:14px">Train with <span class="hl">precision.</span><br>Built around you.</h1>
-    <p class="sub" style="margin-top:14px">Five quick questions, then we'll build every workout and meal around your answers.</p></div>
+    <p class="sub" style="margin-top:14px">Six quick questions, then we'll build every workout and meal around your answers.</p></div>
     <input class="field" id="nm" placeholder="Your first name" value="${esc(p.name)}" oninput="P().name=this.value" onkeydown="if(event.key==='Enter')next()">
     <button class="btn" onclick="next()">Get started</button>`;
   const back=ui.editing?'cancelEdit()':'ui.step--;render()';
   let h=stepHead(back,ui.editing?'Edit profile':`Step ${st} of ${ONB_STEPS}`,ui.editing?0:ONB_STEPS,st);
   if(st===1){
-    h+=`<h2>What's your ideal body?</h2><p class="sub">This sets your reps, sets and rest times.</p>`;
-    h+=GOALS.map(g=>opt(p.goal===g.id,g.ic,g.name,g.desc,`pick('goal','${g.id}')`)).join('');
+    const ft=p.hIn?Math.floor(p.hIn/12):'',inch=p.hIn?p.hIn%12:'';
+    h+=`<h2>A little about you</h2><p class="sub">This tunes your workouts, portions and daily targets. It stays on your device.</p>`;
+    h+=`<div class="mtag" style="margin:4px 0 10px">I am a</div><div class="chips">`+[['f','Woman'],['m','Man'],['x','Prefer not to say']].map(([id,n])=>`<button class="chip ${p.sex===id?'on':''}" onclick="P().sex='${id}';render(true)">${n}</button>`).join('')+`</div>`;
+    h+=`<div class="aboutgrid"><label><span>Age</span><input class="field" inputmode="numeric" placeholder="e.g. 34" value="${p.age||''}" oninput="setNum('age',this.value,13,99)"></label>
+      <label><span>Weight (lb)</span><input class="field" inputmode="decimal" placeholder="e.g. 165" value="${p.wLb||''}" oninput="setNum('wLb',this.value,70,600)"></label>
+      <label><span>Height</span><div class="hrow"><input class="field" inputmode="numeric" placeholder="ft" value="${ft}" oninput="setHeight(this.value,null)"><input class="field" inputmode="numeric" placeholder="in" value="${inch}" oninput="setHeight(null,this.value)"></div></label></div>`;
+    h+=`<button class="btn" ${p.sex?'':'disabled'} onclick="next()">${ui.editing?'Save':'Continue'}</button>`;
+    if(!ui.editing)h+=`<p class="fine" style="text-align:center;margin-top:12px">Age, height and weight are optional, but they let us estimate your daily calories and protein.</p>`;
   } else if(st===2){
+    h+=`<h2>What's your ideal body?</h2><p class="sub">This sets your reps, sets and rest times.</p>`;
+    h+=goalList().map(g=>opt(p.goal===g.id,g.ic,g.name,g.desc,`pick('goal','${g.id}')`)).join('');
+  } else if(st===3){
     h+=`<h2>How experienced are you?</h2><p class="sub">We'll scale the volume so you progress without burning out.</p>`;
     h+=LEVELS.map(g=>opt(p.level===g.id,g.ic,g.name,g.desc,`pick('level','${g.id}')`)).join('');
-  } else if(st===3){
-    h+=`<h2>How big are your portions?</h2><p class="sub">Your meal plan uses your own hand to measure food, so it scales to you.</p>`;
-    h+=SIZES.map(z=>opt(p.size===z.id,z.ic,z.name,z.desc,`pick('size','${z.id}')`)).join('');
   } else if(st===4){
     h+=`<h2>How do you eat?</h2><p class="sub">We'll keep your meal ideas inside these lines.</p>`;
     h+=DIETS.map(([id,n])=>opt(p.diet===id,DIET_INFO[id][0],n,DIET_INFO[id][1],`pick('diet','${id}')`)).join('');
@@ -783,6 +837,9 @@ function renderOnb(){
   }
   return h;
 }
+function setNum(f,v,lo,hi){const n=parseFloat(String(v).replace(/[^\d.]/g,''));P()[f]=(n>=lo&&n<=hi)?n:'';save()}
+function setHeight(ft,inch){const p=P(),cf=p.hIn?Math.floor(p.hIn/12):0,ci=p.hIn?p.hIn%12:0;const f=ft!==null?parseInt(ft)||0:cf,i=inch!==null?Math.min(11,parseInt(inch)||0):ci;const t=f*12+i;p.hIn=(t>=48&&t<=96)?t:(f?t:'');save()}
+function autoSize(){const p=P();if(p.sizeSet)return;const w=+p.wLb||0;p.size=p.sex==='m'?(w&&w<150?'std':'lg'):p.sex==='f'?(w>=200?'lg':'std'):(w>=175?'lg':'std')}
 function pick(field,val){P()[field]=val;render(true);setTimeout(next,200)}
 function next(){
   if(ui.editing)return finishEdit();
@@ -790,8 +847,8 @@ function next(){
   ui.step++;render();
 }
 function toggleFood(id,v){const f=P().foods;if(f[id]===v)delete f[id];else f[id]=v;render(true)}
-function finishOnb(){S.onboarded=true;if(!P().diet)P().diet='none';if(!P().size)P().size='std';ui.tab='train';ui.step=0;ui.meals=null;save();render();toast('You\'re set. Pick a day to train.')}
-function finishEdit(){ui.editing=false;ui.tab='profile';ui.meals=null;save();render();toast('Saved')}
+function finishOnb(){S.onboarded=true;if(!P().diet)P().diet='none';autoSize();ui.tab='train';ui.step=0;ui.meals=null;save();render();toast('You\'re set. Pick a day to train.')}
+function finishEdit(){autoSize();ui.editing=false;ui.tab='profile';ui.meals=null;save();render();toast('Saved')}
 function cancelEdit(){ui.editing=false;S=load()||S;ui.tab='profile';render()}
 
 /* ---------- Calendar ---------- */
@@ -866,7 +923,7 @@ function prescribe(e){
 function poolFor(m,loc){const eq=LOCATIONS.find(l=>l.id===loc).equip;return EX[m].filter(e=>eq.includes(e.eq))}
 function generate(muscles,loc,time){
   const count=COUNT[time],order=MUSCLES.map(x=>x[0]).filter(m=>muscles.includes(m)),eqs=LOCATIONS.find(l=>l.id===loc).equip;
-  const pools=order.map(m=>{const sc=poolFor(m,loc).map(e=>({e,r:eqs.indexOf(e.eq)+Math.random()*1.6})).sort((a,b)=>a.r-b.r).map(x=>x.e);return[...sc.filter(e=>e.k==='c'),...sc.filter(e=>e.k!=='c')]});
+  const pools=order.map(m=>{const sc=poolFor(m,loc).map(e=>({e,r:eqs.indexOf(e.eq)+Math.random()*1.6})).sort((a,b)=>a.r-b.r).map(x=>x.e);const cs=sc.filter(e=>e.k==='c'),is=sc.filter(e=>e.k!=='c');return[...cs.slice(0,2),...is,...cs.slice(2)]});
   const list=[];let i=0,guard=0;
   while(list.length<count&&pools.some(p=>p.length)&&guard++<200){const p=pools[i%pools.length];if(p.length)list.push(p.shift());i++}
   const rank=e=>e.m==='abs'?2:e.k==='c'?0:1;
@@ -883,7 +940,7 @@ function swapEx(idx){
 /* ---------- Set logging & progression ---------- */
 const kindOf=e=>e.k==='t'?'time':(e.eq==='bw'||e.eq==='bar')?'bw':'wt';
 function repRange(e){const m=String(e.rx.reps).match(/(\d+)\s*[–-]\s*(\d+)/);if(m)return[+m[1],+m[2]];const n=String(e.rx.reps).match(/\d+/);return n?[+n[0],+n[0]]:[8,12]}
-const HEAVY=['Deadlift','Barbell Back Squat','Leg Press','Romanian Deadlift','Goblet Squat','Dumbbell RDL','Bulgarian Split Squat','Dumbbell Walking Lunge'];
+const HEAVY=['Hip Thrust Machine','Barbell Glute Bridge','Barbell Sumo Squat','Sumo Deadlift','Deadlift','Barbell Back Squat','Leg Press','Romanian Deadlift','Goblet Squat','Dumbbell RDL','Bulgarian Split Squat','Dumbbell Walking Lunge'];
 function doneSets(it){return (it.log||[]).map((l,j)=>({...l,ok:it.done[j]})).filter(x=>x.ok&&(x.w!==''||x.r!==''))}
 function lastSession(name,before){
   const keys=Object.keys(S.plans).filter(k=>k<before).sort().reverse();
@@ -945,10 +1002,10 @@ function toggleSet(i,j){
 function regen(){const w=S.plans[ui.open];S.plans[ui.open]=generate(w.muscles,w.loc,w.time);save();render();toast('New exercises, same plan')}
 function complete(v){const w=S.plans[ui.open];w.done=v;if(v){w.completedAt=new Date().toISOString();ui.open=null}save();render();toast(v?'Workout complete 🔥':'Marked as not done')}
 function warmup(ms){
-  const up=ms.some(m=>m!=='legs'&&m!=='abs'),low=ms.includes('legs');
+  const up=ms.some(m=>!['legs','glutes','abs'].includes(m)),low=ms.includes('legs')||ms.includes('glutes');
   const w=['2–3 min light cardio: jumping jacks, brisk walk, bike or jump rope'];
   if(up)w.push('Arm circles forward & back: 20 each','10 slow push-ups or wall push-ups','Shoulder pass-throughs or band pull-aparts: 15');
-  if(low)w.push('15 bodyweight squats','Leg swings: 10 each leg, front-to-back & side-to-side','10 hip circles each direction');
+  if(low)w.push('15 bodyweight squats','10 glute bridges','Leg swings: 10 each leg, front-to-back & side-to-side','10 hip circles each direction');
   if(ms.includes('abs')&&!low)w.push('10 cat-cows');
   w.push('1–2 light sets of your first exercise before working sets');
   return w;
@@ -962,7 +1019,7 @@ function finisher(){
 }
 function renderWorkout(){
   const w=S.plans[ui.open],loc=LOCATIONS.find(l=>l.id===w.loc),d=parseKey(ui.open),p=P();
-  const g=GOALS.find(x=>x.id===p.goal),lv=LEVELS.find(x=>x.id===p.level);
+  const g=goalInfo(p.goal),lv=LEVELS.find(x=>x.id===p.level);
   let h=`<div class="onbtop"><button class="iconbtn" onclick="ui.open=null;render()" aria-label="Back to calendar">←</button><span class="stepn">${d.toLocaleDateString(undefined,{weekday:'long',month:'short',day:'numeric'})}</span></div>`;
   h+=`<div class="whead"><div class="mtag hl">${w.done?'✓ Completed':'Your workout'}</div><h2 style="margin-top:4px">${mnames(w.muscles)}</h2>
   <div class="meta"><span class="tag">${loc.ic} ${loc.name}</span><span class="tag">⏱ ~${w.time} min</span><span class="tag">✓ ${sumSets(w,1)}/${sumSets(w)} sets</span></div>
@@ -992,6 +1049,23 @@ function buildMeals(){
   const out={};
   SLOTS.forEach(([s])=>{out[s]=ok.filter(m=>m.slot===s).map(m=>({m,score:m.ing.filter(i=>likes.includes(i)).length*2+Math.random()*1.5})).sort((a,b)=>b.score-a.score).slice(0,3).map(x=>x.m)});
   ui.meals=out;
+}
+/* ---------- Daily targets ---------- */
+function targets(){
+  const p=P(),w=+p.wLb,h=+p.hIn,a=+p.age,g=p.goal||'lean';
+  if(!w)return null;
+  const kg=w*0.4536,bmi=h?703*w/(h*h):null;
+  let protein=Math.round(Math.min(w,h?25*h*h/703:w)*0.8/5)*5; // 0.8 g per lb (uses a healthy-range weight if BMI is high)
+  const out={protein,bmi,cal:null,note:''};
+  if(a&&a<18){out.note='Calorie targets are for adults 18+. Focus on regular meals and protein.';return out}
+  if(h&&a){
+    const cm=h*2.54,base=10*kg+6.25*cm-5*a+(p.sex==='m'?5:p.sex==='f'?-161:-78);
+    let tdee=base*1.45,adj={fat:-.2,lean:-.1,athletic:0,muscle:.1,strength:.05}[g];
+    if(bmi&&bmi<18.5&&adj<0){adj=0;out.note='Your weight is already on the lighter side, so this is set to maintenance rather than a deficit.'}
+    const floor=p.sex==='m'?1500:p.sex==='f'?1200:1350;
+    out.cal=Math.max(floor,Math.round(tdee*(1+adj)/10)*10);
+  }
+  return out;
 }
 /* ---------- Meal plan (hand portions) ---------- */
 const PROT=['chicken','beef','turkey','pork','salmon','fish','shrimp','eggs','tofu','yogurt','cottage','beans','shake'];
@@ -1027,9 +1101,12 @@ function portions(m,isSnack){
   const p=P(),g=p.goal||'lean',big=p.size==='lg';
   const base=isSnack?{p:big?1.5:1,c:1,v:0,f:0}:{p:big?2:1,v:big?2:1,c:(big?2:1)*CMULT[g],f:(big?2:1)*FMULT[g]};
   const lines=[],tot={p:0,v:0,c:0,f:0};
-  const prots=m.ing.filter(i=>PROT.includes(i)),carbs=m.ing.filter(i=>CARB.includes(i)),vegs=m.ing.filter(i=>VEG.includes(i));
-  if(prots.length){const each=half(base.p/prots.length);tot.p=base.p;
-    prots.forEach(id=>{let t;
+  let prots=m.ing.filter(i=>PROT.includes(i));const carbs=m.ing.filter(i=>CARB.includes(i)||(i==='beans'&&prots.length>1)),vegs=m.ing.filter(i=>VEG.includes(i));
+  if(prots.length>1)prots=prots.filter(i=>i!=='beans');
+  const main=prots.find(i=>!['eggs','shake','beans'].includes(i))||prots[0];
+  if(prots.length){tot.p=base.p;
+    prots=[main,...prots.filter(i=>i!==main)];
+    prots.forEach((id,pi)=>{let t;const each=pi===0?base.p:half(base.p/2);
       if(id==='eggs')t=`${Math.max(1,Math.round(each*2.5))} ${pl(Math.round(each*2.5),'egg')}`;
       else if(id==='yogurt'||id==='cottage')t=`${fr(each)} ${pl(each,'cup')} ${FOODNAME[id].toLowerCase()}`;
       else if(id==='shake')t=`${fr(each)} ${pl(each,'scoop')} protein powder`;
@@ -1042,21 +1119,25 @@ function portions(m,isSnack){
       else if(id==='oats')t=`${fr(each)} cupped ${pl(each,'hand')} oats <i>(~${fr(each/2)} cup cooked)</i>`;
       else if(id==='potatoes'||id==='sweetpot')t=`${fr(each)} fist-sized ${FOODNAME[id].toLowerCase().replace(/es$/,'').replace(/s$/,'')}${each>1?'es':''}`;
       else if(id==='bread')t=`${fr(each)} ${pl(each,'slice')} of bread or ${pl(each,'tortilla')}`;
+      else if(id==='beans')t=`${fr(each)} cupped ${pl(each,'hand')} beans or lentils <i>(~${fr(each/2)} cup)</i>`;
       else t=`${fr(each)} ${pl(each,'piece')} of fruit or ${pl(each,'cup')} of berries`;
       lines.push(['🤲','Carbs',t])})}
   if(!isSnack){tot.v=base.v;
     lines.push(['✊','Veggies',vegs.length?`${fr(base.v)} ${pl(base.v,'fist')} ${vegs.map(v=>FOODNAME[v].toLowerCase()).join(' & ')} <i>(~${fr(base.v)} ${pl(base.v,'cup')})</i>`:`${fr(base.v)} ${pl(base.v,'fist')} of any veggies or fruit on the side`]);
     tot.f=base.f;const df=P().diet==='dairyfree'||P().diet==='vegan';
-    lines.push(['👍','Fats',m.ing.includes('avocado')?`${fr(base.f)} ${pl(base.f,'thumb')} avocado <i>(~¼ avocado each)</i>`:`${fr(base.f)} ${pl(base.f,'thumb')} olive oil, nuts${df?'':' or cheese'} <i>(~1 tbsp each)</i>`]);
+    lines.push(['👍','Fats',m.ing.includes('avocado')?`${fr(base.f)} ${pl(base.f,'thumb')} avocado <i>(~¼ avocado each)</i>`:`${fr(base.f)} ${pl(base.f,'thumb')} nuts, nut butter${df?' or olive oil':', olive oil or cheese'} <i>(~1 tbsp each)</i>`]);
   }
   return{lines,tot};
 }
 function renderMeals(){
   const p=P();if(!p.size)p.size='std';
   if(!S.mealDay||S.mealDay.date!==TODAY||S.mealDay.sig!==mealSig())buildDay();
-  const md=S.mealDay,g=GOALS.find(x=>x.id===p.goal)||GOALS[1];
+  const md=S.mealDay,g=goalInfo(p.goal)||goalInfo('lean');
   let h=brand+`<h1>Today's <span class="hl">meals</span></h1><p class="sub" style="margin-top:6px">Built for <b style="color:var(--accent)">${g.name}</b>, from the foods you love.</p>`;
-  h+=`<div class="seg2">${SIZES.map(z=>`<button class="${p.size===z.id?'on':''}" onclick="P().size='${z.id}';save();render(true)">${z.id==='std'?'Standard portions':'Larger portions'}</button>`).join('')}</div>`;
+  const tg=targets();
+  if(tg)h+=`<div class="targets"><div class="mtag">Your daily targets</div><div class="tgrow">${tg.cal?`<div><b>${tg.cal.toLocaleString()}</b><span>calories (est.)</span></div>`:''}<div><b>${tg.protein}g</b><span>protein</span></div></div>${tg.note?`<p>${tg.note}</p>`:tg.cal?'':'<p>Add your age and height in Profile to see a calorie estimate.</p>'}</div>`;
+  else h+=`<div class="targets"><p style="margin:0">Add your weight, height and age in <a href="#" onclick="event.preventDefault();edit(1)">Profile → About you</a> to see your daily calorie and protein targets.</p></div>`;
+  h+=`<div class="seg2">${SIZES.map(z=>`<button class="${p.size===z.id?'on':''}" onclick="P().size='${z.id}';P().sizeSet=true;save();render(true)">${z.id==='std'?'Standard portions':'Larger portions'}</button>`).join('')}</div>`;
   h+=`<details class="card handguide"><summary>How to measure with your hand</summary><div class="hg"><div><b>🖐 Palm</b><span>Protein · ~4 oz</span></div><div><b>✊ Fist</b><span>Veggies · ~1 cup</span></div><div><b>🤲 Cupped hand</b><span>Carbs · ~½ cup</span></div><div><b>👍 Thumb</b><span>Fats · ~1 tbsp</span></div></div></details>`;
   const tot={p:0,v:0,c:0,f:0};
   const card=(slot,label,name,idx)=>{
@@ -1099,14 +1180,15 @@ function personalRecords(){
     if(!b||v>b.v||(v===b.v&&kind==='wt'&&num(x.r)>b.r))best[it.name]={name:it.name,v,r:num(x.r),date:k,label:kind==='wt'?`${v} lb × ${num(x.r)}`:kind==='time'?`${v}s`:`${v} reps`}})}));
   return Object.values(best).sort((a,b)=>b.date.localeCompare(a.date));
 }
+function aboutLine(p){const a=[];if(p.sex)a.push({f:'Woman',m:'Man',x:'—'}[p.sex]);if(p.age)a.push(p.age);if(p.hIn)a.push(`${Math.floor(p.hIn/12)}'${p.hIn%12}"`);if(p.wLb)a.push(p.wLb+' lb');return a.filter(x=>x!=='—').join(' · ')||'Add details'}
 /* ---------- Profile ---------- */
 function renderProfile(){
-  const p=P(),g=GOALS.find(x=>x.id===p.goal),l=LEVELS.find(x=>x.id===p.level),d=DIETS.find(x=>x[0]===p.diet);
+  const p=P(),g=goalInfo(p.goal),l=LEVELS.find(x=>x.id===p.level),d=DIETS.find(x=>x[0]===p.diet);
   const lk=Object.values(p.foods).filter(v=>v==='like').length,dk=Object.values(p.foods).filter(v=>v==='dislike').length;
   const row=(k,v,step)=>`<button class="kv" onclick="edit(${step})"><span>${k}</span><b>${v} <em>›</em></b></button>`;
   const nm=(p.name||'').trim(),poss=nm?esc(nm)+(/s$/i.test(nm)?'’':'’s'):'Your';
   let h=brand+`<h1>${poss} <span class="hl">profile</span></h1><p class="sub" style="margin-top:6px">Tap anything to change it. New workouts use your latest answers.</p>`;
-  h+=`<div class="card">${row('Ideal body',g?g.ic+' '+g.name:'—',1)}${row('Experience',l?l.name:'—',2)}${row('Portion size',(SIZES.find(z=>z.id===p.size)||SIZES[0]).name,3)}${row('Eating style',d?d[1]:'—',4)}${row('Foods you love',lk+' picked',5)}${row('Foods you avoid',dk+' picked',6)}</div>`;
+  h+=`<div class="card">${row('About you',aboutLine(p),1)}${row('Ideal body',g?g.ic+' '+g.name:'—',2)}${row('Experience',l?l.name:'—',3)}${row('Eating style',d?d[1]:'—',4)}${row('Foods you love',lk+' picked',5)}${row('Foods you avoid',dk+' picked',6)}</div>`;
   h+=ui.confirmReset?`<div class="row"><button class="btn danger" onclick="resetAll()">Erase everything</button><button class="btn ghost" onclick="ui.confirmReset=false;render(true)">Cancel</button></div>`
     :`<button class="btn danger" onclick="ui.confirmReset=true;render(true)">Reset app</button>`;
   h+=`<p class="credit">Exercise illustrations and data by <a href="https://repdb.co" target="_blank" rel="noopener">RepDB (repdb.co)</a></p>`;
@@ -1125,7 +1207,7 @@ const ICONS={
 function renderNav(){
   return `<nav><div class="in">`+[['train','Train'],['meals','Meals'],['history','Progress'],['profile','Profile']].map(([id,n])=>`<button class="${ui.tab===id?'on':''}" onclick="ui.tab='${id}';ui.open=null;ui.plan=null;ui.confirmReset=false;render()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICONS[id]}</svg>${n}</button>`).join('')+`</div></nav>`;
 }
-const IMG={"Barbell Bench Press":["img/bench-press-start.webp","img/bench-press-peak.webp"],"Machine Chest Press":["img/chest-press-machine-start.webp","img/chest-press-machine-peak.webp"],"Cable Fly":["img/cable-fly-start.webp","img/cable-fly-peak.webp"],"Pec Deck":["img/pec-deck-start.webp","img/pec-deck-peak.webp"],"Incline Dumbbell Press":["img/incline-db-press-start.webp","img/incline-db-press-peak.webp"],"Dumbbell Floor Press":["img/dumbbell-floor-press-start.webp","img/dumbbell-floor-press-peak.webp"],"Dumbbell Fly":["img/db-fly-start.webp","img/db-fly-peak.webp"],"Push-Up":["img/push-up-start.webp","img/push-up-peak.webp"],"Wide Push-Up":["img/wide-grip-push-ups-start.webp","img/wide-grip-push-ups-peak.webp"],"Decline Push-Up":["img/decline-push-up-start.webp","img/decline-push-up-peak.webp"],"Incline Push-Up":["img/incline-push-ups-start.webp","img/incline-push-ups-peak.webp"],"Chest Dips":["img/dips-start.webp","img/dips-peak.webp"],"Cable Rope Pushdown":["img/tricep-pushdown-start.webp","img/tricep-pushdown-peak.webp"],"EZ-Bar Skull Crusher":["img/skull-crusher-start.webp","img/skull-crusher-peak.webp"],"Close-Grip Bench Press":["img/close-grip-bench-press-start.webp","img/close-grip-bench-press-peak.webp"],"Overhead Dumbbell Extension":["img/overhead-tricep-extension-start.webp","img/overhead-tricep-extension-peak.webp"],"Dumbbell Kickback":["img/tricep-kickback-start.webp","img/tricep-kickback-peak.webp"],"Diamond Push-Up":["img/diamond-push-ups-start.webp","img/diamond-push-ups-peak.webp"],"Bench Dips":["img/bench-dips-start.webp","img/bench-dips-peak.webp"],"Parallel Bar Dips":["img/weighted-dips-start.webp","img/weighted-dips-peak.webp"],"Band Pushdown":["img/v-bar-tricep-pushdown-start.webp","img/v-bar-tricep-pushdown-peak.webp"],"Barbell Curl":["img/barbell-curl-start.webp","img/barbell-curl-peak.webp"],"Cable Curl":["img/cable-curl-start.webp","img/cable-curl-peak.webp"],"Preacher Curl":["img/preacher-curl-start.webp","img/preacher-curl-peak.webp"],"Dumbbell Curl":["img/bicep-curl-start.webp","img/bicep-curl-peak.webp"],"Hammer Curl":["img/hammer-curl-start.webp","img/hammer-curl-peak.webp"],"Incline Dumbbell Curl":["img/incline-db-curl-start.webp","img/incline-db-curl-peak.webp"],"Concentration Curl":["img/concentration-curl-start.webp","img/concentration-curl-peak.webp"],"Chin-Up":["img/chin-ups-start.webp","img/chin-ups-peak.webp"],"Backpack Curl":["img/kettlebell-curl-start.webp","img/kettlebell-curl-peak.webp"],"Towel Isometric Curl":["img/kettlebell-curl-iso-hold-main.webp"],"Band Curl":["img/strict-curl-start.webp","img/strict-curl-peak.webp"],"Barbell Overhead Press":["img/ohp-start.webp","img/ohp-peak.webp"],"Machine Shoulder Press":["img/machine-shoulder-press-start.webp","img/machine-shoulder-press-peak.webp"],"Cable Lateral Raise":["img/cable-lateral-raise-start.webp","img/cable-lateral-raise-peak.webp"],"Face Pull":["img/face-pull-start.webp","img/face-pull-peak.webp"],"Seated Dumbbell Press":["img/seated-db-press-start.webp","img/seated-db-press-peak.webp"],"Arnold Press":["img/arnold-press-start.webp","img/arnold-press-peak.webp"],"Dumbbell Lateral Raise":["img/lateral-raise-start.webp","img/lateral-raise-peak.webp"],"Rear Delt Fly":["img/rear-delt-fly-start.webp","img/rear-delt-fly-peak.webp"],"Pike Push-Up":["img/pike-push-ups-start.webp","img/pike-push-ups-peak.webp"],"Plank Shoulder Taps":["img/single-arm-plank-main.webp"],"Band Pull-Apart":["img/band-pull-apart-start.webp","img/band-pull-apart-peak.webp"],"Deadlift":["img/deadlift-start.webp","img/deadlift-peak.webp"],"Lat Pulldown":["img/lat-pulldown-start.webp","img/lat-pulldown-peak.webp"],"Seated Cable Row":["img/seated-cable-row-start.webp","img/seated-cable-row-peak.webp"],"Barbell Row":["img/barbell-row-start.webp","img/barbell-row-peak.webp"],"One-Arm Dumbbell Row":["img/single-arm-db-row-start.webp","img/single-arm-db-row-peak.webp"],"Dumbbell Pullover":["img/db-pullover-start.webp","img/db-pullover-peak.webp"],"Chest-Supported DB Row":["img/chest-supported-db-row-start.webp","img/chest-supported-db-row-peak.webp"],"Pull-Up":["img/pull-up-start.webp","img/pull-up-peak.webp"],"Inverted Row":["img/inverted-row-start.webp","img/inverted-row-peak.webp"],"Backpack Row":["img/bent-over-db-row-start.webp","img/bent-over-db-row-peak.webp"],"Superman Hold":["img/superman-start.webp","img/superman-peak.webp"],"Reverse Snow Angels":["img/superman-start.webp","img/superman-peak.webp"],"Barbell Back Squat":["img/squat-start.webp","img/squat-peak.webp"],"Leg Press":["img/leg-press-start.webp","img/leg-press-peak.webp"],"Romanian Deadlift":["img/romanian-deadlift-start.webp","img/romanian-deadlift-peak.webp"],"Leg Extension":["img/leg-extension-start.webp","img/leg-extension-peak.webp"],"Lying Leg Curl":["img/leg-curl-start.webp","img/leg-curl-peak.webp"],"Goblet Squat":["img/goblet-squat-start.webp","img/goblet-squat-peak.webp"],"Dumbbell RDL":["img/dumbbell-romanian-deadlift-start.webp","img/dumbbell-romanian-deadlift-peak.webp"],"Dumbbell Walking Lunge":["img/db-lunge-start.webp","img/db-lunge-peak.webp"],"Bulgarian Split Squat":["img/bulgarian-split-squat-start.webp","img/bulgarian-split-squat-peak.webp"],"Bodyweight Squat":["img/bodyweight-squat-start.webp","img/bodyweight-squat-peak.webp"],"Reverse Lunge":["img/bodyweight-reverse-lunge-start.webp","img/bodyweight-reverse-lunge-peak.webp"],"Jump Squat":["img/jump-squat-start.webp","img/jump-squat-peak.webp"],"Step-Up":["img/step-ups-start.webp","img/step-ups-peak.webp"],"Glute Bridge":["img/glute-bridge-start.webp","img/glute-bridge-peak.webp"],"Wall Sit":["img/wall-sit-main.webp"],"Calf Raise":["img/bodyweight-calf-raise-start.webp","img/bodyweight-calf-raise-peak.webp"],"Cable Crunch":["img/cable-crunch-start.webp","img/cable-crunch-peak.webp"],"Ab Wheel Rollout":["img/ab-wheel-rollout-start.webp","img/ab-wheel-rollout-peak.webp"],"Hanging Knee Raise":["img/hanging-knee-raise-start.webp","img/hanging-knee-raise-peak.webp"],"Weighted Russian Twist":["img/russian-twist-start.webp","img/russian-twist-peak.webp"],"Plank":["img/plank-main.webp"],"Side Plank":["img/side-plank-main.webp"],"Dead Bug":["img/dead-bug-start.webp","img/dead-bug-peak.webp"],"Bicycle Crunch":["img/bicycle-crunch-start.webp","img/bicycle-crunch-peak.webp"],"Lying Leg Raise":["img/lying-leg-raise-start.webp","img/lying-leg-raise-peak.webp"],"Mountain Climbers":["img/mountain-climbers-start.webp","img/mountain-climbers-peak.webp"],"Hollow Body Hold":["img/hollow-body-hold-main.webp"]};
+const IMG={"Hip Thrust Machine":["img/smith-machine-hip-thrust-start.webp", "img/smith-machine-hip-thrust-peak.webp"],"Barbell Glute Bridge":["img/barbell-glute-bridge-start.webp", "img/barbell-glute-bridge-peak.webp"],"Barbell Sumo Squat":["img/sumo-squat-start.webp", "img/sumo-squat-peak.webp"],"Cable Pull-Through":["img/cable-pull-through-start.webp", "img/cable-pull-through-peak.webp"],"Cable Glute Kickback":["img/cable-kickback-start.webp", "img/cable-kickback-peak.webp"],"Hip Abduction Machine":["img/hip-abduction-start.webp", "img/hip-abduction-peak.webp"],"Dumbbell Sumo Squat":["img/db-sumo-squat-start.webp", "img/db-sumo-squat-peak.webp"],"Sumo Deadlift":["img/kettlebell-sumo-deadlift-start.webp", "img/kettlebell-sumo-deadlift-peak.webp"],"Single-Leg Dumbbell RDL":["img/single-leg-romanian-deadlift-start.webp", "img/single-leg-romanian-deadlift-peak.webp"],"Single-Leg Hip Thrust":["img/single-leg-hip-thrust-start.webp", "img/single-leg-hip-thrust-peak.webp"],"Side Lunge":["img/side-lunge-start.webp", "img/side-lunge-peak.webp"],"Single-Leg Glute Bridge":["img/single-leg-glute-bridge-start.webp", "img/single-leg-glute-bridge-peak.webp"],"Glute Kickback":["img/glute-kickback-start.webp", "img/glute-kickback-peak.webp"],"Banded Hip Thrust":["img/banded-hip-thrust-start.webp", "img/banded-hip-thrust-peak.webp"],"Banded Lateral Walk":["img/banded-lateral-walk-start.webp", "img/banded-lateral-walk-peak.webp"],"Banded Clamshell":["img/banded-clamshell-start.webp", "img/banded-clamshell-peak.webp"],"Banded Fire Hydrant":["img/banded-fire-hydrant-start.webp", "img/banded-fire-hydrant-peak.webp"],"Barbell Bench Press":["img/bench-press-start.webp","img/bench-press-peak.webp"],"Machine Chest Press":["img/chest-press-machine-start.webp","img/chest-press-machine-peak.webp"],"Cable Fly":["img/cable-fly-start.webp","img/cable-fly-peak.webp"],"Pec Deck":["img/pec-deck-start.webp","img/pec-deck-peak.webp"],"Incline Dumbbell Press":["img/incline-db-press-start.webp","img/incline-db-press-peak.webp"],"Dumbbell Floor Press":["img/dumbbell-floor-press-start.webp","img/dumbbell-floor-press-peak.webp"],"Dumbbell Fly":["img/db-fly-start.webp","img/db-fly-peak.webp"],"Push-Up":["img/push-up-start.webp","img/push-up-peak.webp"],"Wide Push-Up":["img/wide-grip-push-ups-start.webp","img/wide-grip-push-ups-peak.webp"],"Decline Push-Up":["img/decline-push-up-start.webp","img/decline-push-up-peak.webp"],"Incline Push-Up":["img/incline-push-ups-start.webp","img/incline-push-ups-peak.webp"],"Chest Dips":["img/dips-start.webp","img/dips-peak.webp"],"Cable Rope Pushdown":["img/tricep-pushdown-start.webp","img/tricep-pushdown-peak.webp"],"EZ-Bar Skull Crusher":["img/skull-crusher-start.webp","img/skull-crusher-peak.webp"],"Close-Grip Bench Press":["img/close-grip-bench-press-start.webp","img/close-grip-bench-press-peak.webp"],"Overhead Dumbbell Extension":["img/overhead-tricep-extension-start.webp","img/overhead-tricep-extension-peak.webp"],"Dumbbell Kickback":["img/tricep-kickback-start.webp","img/tricep-kickback-peak.webp"],"Diamond Push-Up":["img/diamond-push-ups-start.webp","img/diamond-push-ups-peak.webp"],"Bench Dips":["img/bench-dips-start.webp","img/bench-dips-peak.webp"],"Parallel Bar Dips":["img/weighted-dips-start.webp","img/weighted-dips-peak.webp"],"Band Pushdown":["img/v-bar-tricep-pushdown-start.webp","img/v-bar-tricep-pushdown-peak.webp"],"Barbell Curl":["img/barbell-curl-start.webp","img/barbell-curl-peak.webp"],"Cable Curl":["img/cable-curl-start.webp","img/cable-curl-peak.webp"],"Preacher Curl":["img/preacher-curl-start.webp","img/preacher-curl-peak.webp"],"Dumbbell Curl":["img/bicep-curl-start.webp","img/bicep-curl-peak.webp"],"Hammer Curl":["img/hammer-curl-start.webp","img/hammer-curl-peak.webp"],"Incline Dumbbell Curl":["img/incline-db-curl-start.webp","img/incline-db-curl-peak.webp"],"Concentration Curl":["img/concentration-curl-start.webp","img/concentration-curl-peak.webp"],"Chin-Up":["img/chin-ups-start.webp","img/chin-ups-peak.webp"],"Backpack Curl":["img/kettlebell-curl-start.webp","img/kettlebell-curl-peak.webp"],"Towel Isometric Curl":["img/kettlebell-curl-iso-hold-main.webp"],"Band Curl":["img/strict-curl-start.webp","img/strict-curl-peak.webp"],"Barbell Overhead Press":["img/ohp-start.webp","img/ohp-peak.webp"],"Machine Shoulder Press":["img/machine-shoulder-press-start.webp","img/machine-shoulder-press-peak.webp"],"Cable Lateral Raise":["img/cable-lateral-raise-start.webp","img/cable-lateral-raise-peak.webp"],"Face Pull":["img/face-pull-start.webp","img/face-pull-peak.webp"],"Seated Dumbbell Press":["img/seated-db-press-start.webp","img/seated-db-press-peak.webp"],"Arnold Press":["img/arnold-press-start.webp","img/arnold-press-peak.webp"],"Dumbbell Lateral Raise":["img/lateral-raise-start.webp","img/lateral-raise-peak.webp"],"Rear Delt Fly":["img/rear-delt-fly-start.webp","img/rear-delt-fly-peak.webp"],"Pike Push-Up":["img/pike-push-ups-start.webp","img/pike-push-ups-peak.webp"],"Plank Shoulder Taps":["img/single-arm-plank-main.webp"],"Band Pull-Apart":["img/band-pull-apart-start.webp","img/band-pull-apart-peak.webp"],"Deadlift":["img/deadlift-start.webp","img/deadlift-peak.webp"],"Lat Pulldown":["img/lat-pulldown-start.webp","img/lat-pulldown-peak.webp"],"Seated Cable Row":["img/seated-cable-row-start.webp","img/seated-cable-row-peak.webp"],"Barbell Row":["img/barbell-row-start.webp","img/barbell-row-peak.webp"],"One-Arm Dumbbell Row":["img/single-arm-db-row-start.webp","img/single-arm-db-row-peak.webp"],"Dumbbell Pullover":["img/db-pullover-start.webp","img/db-pullover-peak.webp"],"Chest-Supported DB Row":["img/chest-supported-db-row-start.webp","img/chest-supported-db-row-peak.webp"],"Pull-Up":["img/pull-up-start.webp","img/pull-up-peak.webp"],"Inverted Row":["img/inverted-row-start.webp","img/inverted-row-peak.webp"],"Backpack Row":["img/bent-over-db-row-start.webp","img/bent-over-db-row-peak.webp"],"Superman Hold":["img/superman-start.webp","img/superman-peak.webp"],"Reverse Snow Angels":["img/superman-start.webp","img/superman-peak.webp"],"Barbell Back Squat":["img/squat-start.webp","img/squat-peak.webp"],"Leg Press":["img/leg-press-start.webp","img/leg-press-peak.webp"],"Romanian Deadlift":["img/romanian-deadlift-start.webp","img/romanian-deadlift-peak.webp"],"Leg Extension":["img/leg-extension-start.webp","img/leg-extension-peak.webp"],"Lying Leg Curl":["img/leg-curl-start.webp","img/leg-curl-peak.webp"],"Goblet Squat":["img/goblet-squat-start.webp","img/goblet-squat-peak.webp"],"Dumbbell RDL":["img/dumbbell-romanian-deadlift-start.webp","img/dumbbell-romanian-deadlift-peak.webp"],"Dumbbell Walking Lunge":["img/db-lunge-start.webp","img/db-lunge-peak.webp"],"Bulgarian Split Squat":["img/bulgarian-split-squat-start.webp","img/bulgarian-split-squat-peak.webp"],"Bodyweight Squat":["img/bodyweight-squat-start.webp","img/bodyweight-squat-peak.webp"],"Reverse Lunge":["img/bodyweight-reverse-lunge-start.webp","img/bodyweight-reverse-lunge-peak.webp"],"Jump Squat":["img/jump-squat-start.webp","img/jump-squat-peak.webp"],"Step-Up":["img/step-ups-start.webp","img/step-ups-peak.webp"],"Glute Bridge":["img/glute-bridge-start.webp","img/glute-bridge-peak.webp"],"Wall Sit":["img/wall-sit-main.webp"],"Calf Raise":["img/bodyweight-calf-raise-start.webp","img/bodyweight-calf-raise-peak.webp"],"Cable Crunch":["img/cable-crunch-start.webp","img/cable-crunch-peak.webp"],"Ab Wheel Rollout":["img/ab-wheel-rollout-start.webp","img/ab-wheel-rollout-peak.webp"],"Hanging Knee Raise":["img/hanging-knee-raise-start.webp","img/hanging-knee-raise-peak.webp"],"Weighted Russian Twist":["img/russian-twist-start.webp","img/russian-twist-peak.webp"],"Plank":["img/plank-main.webp"],"Side Plank":["img/side-plank-main.webp"],"Dead Bug":["img/dead-bug-start.webp","img/dead-bug-peak.webp"],"Bicycle Crunch":["img/bicycle-crunch-start.webp","img/bicycle-crunch-peak.webp"],"Lying Leg Raise":["img/lying-leg-raise-start.webp","img/lying-leg-raise-peak.webp"],"Mountain Climbers":["img/mountain-climbers-start.webp","img/mountain-climbers-peak.webp"],"Hollow Body Hold":["img/hollow-body-hold-main.webp"]};
 const MLABEL={chest:'Chest',delts:'Shoulders',reardelts:'Rear delts',traps:'Traps',biceps:'Biceps',triceps:'Triceps',forearms:'Forearms',abs:'Abs',obliques:'Obliques',lats:'Lats',lowerback:'Lower back',glutes:'Glutes',quads:'Quads',hamstrings:'Hamstrings',calves:'Calves'};
 function vizFor(name){
   const fx=FX[name];if(!fx)return'';
